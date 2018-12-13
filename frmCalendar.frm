@@ -64,7 +64,7 @@ On Error GoTo err_initialize
         Call setDataLabels(fChangeStrToInt(cmbMonth.Text), txtYear.Text)
     g_bolInitialize = False
 Exit Sub
-            'Info2
+
     Dim i As Integer
 
     If Val(Application.Version) >= 9 Then                           ' Sonderbereich zum Deaktivieren der Funktionen in der Titelleiste
