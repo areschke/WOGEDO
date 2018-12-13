@@ -20,16 +20,16 @@ Option Explicit
 ' Index
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ' 1.  UserForm_Initialize    -   Initialisierung UserForm
-' 2.  pFillCmbMonth          -   Dropdown mit Monatsnamen füllen
+' 2.  pFillCmbMonth          -   Dropdown mit Monatsnamen fÃ¼llen
 ' 3.  cmbMonth_Change        -   Refresh bei Monatswechsel
 ' 4.  cmbMonth_Exit          -   Refresh bei Monatswechsel
 ' 5.  udMonth_Change         -   Gleichschaltung Monat mit UpDown-Schalter (Buddy)      REMARKED IN VERS. 1.1 / 05.10.11
 ' 6.  txtYear_Change         -   Refresh bei Jahreswechsel
 ' 7.  setDataLabels          -   Tage in Raster verteilen
-' 8.  pClearDataLabels       -   Raster zurücksetzen
-' 9.  pReturnDate            -   Rückgabewert in globale Variable schreiben
-' 10. pSetNewMonth           -   Raster mit neuem Monat befüllen bei Klick auf "graue" Datumsfelder
-' 11 - 15.                   -   Schaltflächen Monat und Jahr + und -
+' 8.  pClearDataLabels       -   Raster zurÃ¼cksetzen
+' 9.  pReturnDate            -   RÃ¼ckgabewert in globale Variable schreiben
+' 10. pSetNewMonth           -   Raster mit neuem Monat befÃ¼llen bei Klick auf "graue" Datumsfelder
+' 11 - 15.                   -   SchaltflÃ¤chen Monat und Jahr + und -
 ' 16 - 56.                   -   Click-Events auf Labels (Kein Errorhandling)
 '======================================================================================================================
 
@@ -57,14 +57,14 @@ Private bCloseBtn As Boolean
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Private Sub UserForm_Initialize()
 On Error GoTo err_initialize
-    g_bolInitialize = True              ' Während Initialisierung werden automatisch Refreshs (Change- und Exit-Events) unterbunden
+    g_bolInitialize = True              ' WÃ¤hrend Initialisierung werden automatisch Refreshs (Change- und Exit-Events) unterbunden
         txtYear.Text = Year(Date)       ' Initialwert Jahr
-        Call pFillCmbMonth              ' Aufruf Befüllung Dropdown "Monatsnamen"
-        fSetMonthText (Month(Date))     ' Übersetzung der Inhalte des Dropdowns Monatsnamen
+        Call pFillCmbMonth              ' Aufruf BefÃ¼llung Dropdown "Monatsnamen"
+        fSetMonthText (Month(Date))     ' Ãœbersetzung der Inhalte des Dropdowns Monatsnamen
         Call setDataLabels(fChangeStrToInt(cmbMonth.Text), txtYear.Text)
     g_bolInitialize = False
 Exit Sub
-
+            'Info
     Dim i As Integer
 
     If Val(Application.Version) >= 9 Then                           ' Sonderbereich zum Deaktivieren der Funktionen in der Titelleiste
@@ -79,12 +79,12 @@ Exit Sub
 ' Errorhandling
 err_initialize:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'UserForm_Initialize' in 'frmCalendar'. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'UserForm_Initialize' in 'frmCalendar'. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
 
-Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)    ' nicht mit rotem X schließen
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)    ' nicht mit rotem X schlieÃŸen
 
     If CloseMode = vbFormControlMenu Then
         Exit Sub
@@ -117,13 +117,13 @@ End Sub
 
 
 '=============================================================================================================================
-' 2. pFillCmbMonth  -  Dropdown mit Monatsnamen füllen
+' 2. pFillCmbMonth  -  Dropdown mit Monatsnamen fÃ¼llen
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Private Sub pFillCmbMonth()
 On Error GoTo err_pFillCmbMonth
     cmbMonth.AddItem "Januar"
     cmbMonth.AddItem "Februar"
-    cmbMonth.AddItem "März"
+    cmbMonth.AddItem "MÃ¤rz"
     cmbMonth.AddItem "April"
     cmbMonth.AddItem "Mai"
     cmbMonth.AddItem "Juni"
@@ -138,7 +138,7 @@ Exit Sub
 ' Errorhandling
 err_pFillCmbMonth:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'err_pFillCmbMonth' in 'frmCalendar'. Dropdown konnte nicht befüllt werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'err_pFillCmbMonth' in 'frmCalendar'. Dropdown konnte nicht befÃ¼llt werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
     
 End Sub
@@ -152,10 +152,10 @@ Private Sub cmbMonth_Change()
 On Error GoTo err_cmbMonthChange
     If g_bolInitialize = False And g_bolMonthChange = False Then
         If fPlaus(cmbMonth.Text, 1) = True Then                     ' Wenn Monatsname korrekt eingegeben wurde und...
-            If lblk2d1.Caption <> "" Then                           ' das Labelraster Einträge enthält...
-                Call pClearDataLabels                               ' Aufruf Prozedur um alle Einträge zu entfernen
+            If lblk2d1.Caption <> "" Then                           ' das Labelraster EintrÃ¤ge enthÃ¤lt...
+                Call pClearDataLabels                               ' Aufruf Prozedur um alle EintrÃ¤ge zu entfernen
             End If
-            Call setDataLabels(cmbMonth.Text, txtYear.Text, fChangeStrToInt(cmbMonth.Text))     ' Falls Raster nicht beschrieben, Aufruf für die Befüllung des Monatsrasters
+            Call setDataLabels(cmbMonth.Text, txtYear.Text, fChangeStrToInt(cmbMonth.Text))     ' Falls Raster nicht beschrieben, Aufruf fÃ¼r die BefÃ¼llung des Monatsrasters
         End If
     End If
 Exit Sub
@@ -163,7 +163,7 @@ Exit Sub
 ' Errorhandling
 err_cmbMonthChange:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'cmbMonth_Change' in 'frmCalendar'. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'cmbMonth_Change' in 'frmCalendar'. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 '=============================================================================================================================
@@ -186,7 +186,7 @@ Exit Sub
 ' Errorhandling
 err_cmbMonthExit:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'cmbMonth_Exit' in 'frmCalendar'. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'cmbMonth_Exit' in 'frmCalendar'. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
@@ -194,7 +194,7 @@ End Sub
 '=============================================================================================================================
 ' 5. udMonth_Change -   Gleichschaltung Monat mit UpDown-Schalter (Buddy)
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-' Anmerkungen:      Bei Änderung des Monats via UpDown-Schaltfläche Refresh anstossen
+' Anmerkungen:      Bei Ã„nderung des Monats via UpDown-SchaltflÃ¤che Refresh anstossen
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 'Private Sub udMonth_Change()
 'On Error GoTo err_udMonthChange
@@ -208,14 +208,14 @@ End Sub
 '' Errorhandling
 'err_udMonthChange:
 '    MsgBox "Error " & Err.Number & " (" & Err.Description _
-'        & ") in der Prozedur 'udMonth_Change' in 'frmCalendar'. Monatswechsel konnte nicht verarbeitet werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+'        & ") in der Prozedur 'udMonth_Change' in 'frmCalendar'. Monatswechsel konnte nicht verarbeitet werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
 '    End
 'End Sub
 
 '=============================================================================================================================
 ' 6. txtYear_Change  -   Refresh bei Jahreswechsel
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-' Anmerkungen:      Bei Änderung des Jahres Refresh anstossen (ausser bei Initialisierung und beim Wechsel durch Klick auf "grauen" Datumsfeldern
+' Anmerkungen:      Bei Ã„nderung des Jahres Refresh anstossen (ausser bei Initialisierung und beim Wechsel durch Klick auf "grauen" Datumsfeldern
 '--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Private Sub txtYear_Change()
 On Error GoTo err_txtYearChange
@@ -234,7 +234,7 @@ Exit Sub
 ' Errorhandling
 err_txtYearChange:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'txtYear_Change' in 'frmCalendar'. Jahreswechsel konnte nicht verarbeitet werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'txtYear_Change' in 'frmCalendar'. Jahreswechsel konnte nicht verarbeitet werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
@@ -244,23 +244,23 @@ End Sub
 Private Sub setDataLabels(dMonth, dYear, Optional varMonth As Variant = "")
 ' Deklarationen
 Dim strLabel            As String       'Name des jeweiligen Label-Steuerelements
-Dim intCounter          As Integer      'Laufnummer für Tageszahl (1 - 28/29/30/31)
-Dim intWeekCounter      As Integer      'Zähler für die angezeigten Wochen (6)
-Dim intDayCounter       As Integer      'Zähler für die aktuelle Tagesnummer innerhalb der Wochen (1 - 7 | 1 = Montag)
+Dim intCounter          As Integer      'Laufnummer fÃ¼r Tageszahl (1 - 28/29/30/31)
+Dim intWeekCounter      As Integer      'ZÃ¤hler fÃ¼r die angezeigten Wochen (6)
+Dim intDayCounter       As Integer      'ZÃ¤hler fÃ¼r die aktuelle Tagesnummer innerhalb der Wochen (1 - 7 | 1 = Montag)
 Dim datLastDayMonth     As Date         'Letzter Tag im Monat als Datum
 Dim intLastDayMonth     As Integer      'Letzter Tag im Monat als Ganzzahl
 Dim datFirstDayOfMonth  As Date         'Erster Tag im Monat als Datum
 Dim intStartKW          As Date         'Erste Kalenderwoche des angezeigten Zeitraums
 Dim datActiveDate       As Date         'Aktuell bearbeitetes Datum
-Dim bolPostActiveMonth  As Boolean      'Schalter, welcher auf True gesetzt wird, wenn die angezeigten Daten bereits zu nächsten Monat gehören
-Dim strKW               As String       'Name des Labels für die Kalenderwoche
-' Zähler und Variablen für Vormonat
-Dim intVormonat         As Integer      'Zähler für die Vearbeitung jener angezeigten Daten, welche zum Vormonat gehören
-Dim intVormonatTag      As Integer      'Zähler für die Vearbeitung jener angezeigten Daten, welche zum Vormonat gehören
+Dim bolPostActiveMonth  As Boolean      'Schalter, welcher auf True gesetzt wird, wenn die angezeigten Daten bereits zu nÃ¤chsten Monat gehÃ¶ren
+Dim strKW               As String       'Name des Labels fÃ¼r die Kalenderwoche
+' ZÃ¤hler und Variablen fÃ¼r Vormonat
+Dim intVormonat         As Integer      'ZÃ¤hler fÃ¼r die Vearbeitung jener angezeigten Daten, welche zum Vormonat gehÃ¶ren
+Dim intVormonatTag      As Integer      'ZÃ¤hler fÃ¼r die Vearbeitung jener angezeigten Daten, welche zum Vormonat gehÃ¶ren
 
 ' Initialisierung
 bolPostActiveMonth = False
-If varMonth <> "" Then dMonth = varMonth    ' Falls bei Aufruf der Prozedur mittels der optionalen Variable "varMonth" ein Monat (Zahl) übergeben wurde, diese verwenden
+If varMonth <> "" Then dMonth = varMonth    ' Falls bei Aufruf der Prozedur mittels der optionalen Variable "varMonth" ein Monat (Zahl) Ã¼bergeben wurde, diese verwenden
 intCounter = 1
 intDayCounter = Weekday("01." & dMonth & "." & dYear, vbMonday)
 intStartKW = "01." & dMonth & "." & dYear
@@ -283,8 +283,8 @@ Next intVormonatTag
 
 
 ' Verarbeitung aktiver Monat
-For intWeekCounter = 1 To 6                                         ' Übergeordnete Schlaufe für jede angezeigte Woche
-    For intDayCounter = intDayCounter To 7                          ' Schlaufe für jeden Tag innerhalb einer Woche
+For intWeekCounter = 1 To 6                                         ' Ãœbergeordnete Schlaufe fÃ¼r jede angezeigte Woche
+    For intDayCounter = intDayCounter To 7                          ' Schlaufe fÃ¼r jeden Tag innerhalb einer Woche
         strLabel = "lblk" & intWeekCounter & "d" & intDayCounter    ' Identifizierung Label
         Me.Controls(strLabel).Caption = intCounter                  ' Beschriftung Label
         If bolPostActiveMonth = True Then Me.Controls(strLabel).ForeColor = &H808080    ' Wenn Datum ausserhalb Betrachtungszeitraum Schriftfarbe auf Grau setzen
@@ -300,11 +300,11 @@ For intWeekCounter = 1 To 6                                         ' Übergeordn
         If intCounter = intLastDayMonth + 1 Then
             intCounter = 1              ' Reset Monatstag auf 1
             dMonth = dMonth + 1         ' Monat = Monat + 1
-            If dMonth = 13 Then         ' Falls Monat = 13, dann Jahr erhöhen und Monatsnummer auf 1 (Januar) setzen
+            If dMonth = 13 Then         ' Falls Monat = 13, dann Jahr erhÃ¶hen und Monatsnummer auf 1 (Januar) setzen
                 dMonth = 1
                 dYear = dYear + 1
             End If
-            bolPostActiveMonth = True   ' Flag für Vearbeitung Folgemonat gesetzt.
+            bolPostActiveMonth = True   ' Flag fÃ¼r Vearbeitung Folgemonat gesetzt.
         End If
         
     Next intDayCounter
@@ -323,12 +323,12 @@ Exit Sub
 ' Errorhandling
 err_udMonthChange:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'setDataLabels' in 'frmCalendar'. Kalender konnte nicht aufgebaut werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'setDataLabels' in 'frmCalendar'. Kalender konnte nicht aufgebaut werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
 '======================================================================================================================
-' 8. pClearDataLabels - Raster zurücksetzen
+' 8. pClearDataLabels - Raster zurÃ¼cksetzen
 '======================================================================================================================
 Sub pClearDataLabels()
 Dim myCtl
@@ -345,12 +345,12 @@ Exit Sub
 ' Errorhandling
 err_pClearDataLabels:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'pClearDataLabels' in 'frmCalendar'. Kalender konnte nicht zurückgesetzt werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'pClearDataLabels' in 'frmCalendar'. Kalender konnte nicht zurÃ¼ckgesetzt werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
 '======================================================================================================================
-' 9. pReturnDate - Rückgabewert in globale Variable schreiben
+' 9. pReturnDate - RÃ¼ckgabewert in globale Variable schreiben
 '======================================================================================================================
 Public Sub pReturnDate(dTag, dMonat, dJahr)
 On Error GoTo err_pReturnDate
@@ -361,14 +361,14 @@ Exit Sub
 ' Errorhandling
 err_pReturnDate:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'pReturnDate' in 'frmCalendar'. Rückgabewert konnte nicht übergeben werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'pReturnDate' in 'frmCalendar'. RÃ¼ckgabewert konnte nicht Ã¼bergeben werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
 '======================================================================================================================
-' 10. pSetNewMonth - Raster mit neuem Monat befüllen bei Klick auf "graue" Datumsfelder
+' 10. pSetNewMonth - Raster mit neuem Monat befÃ¼llen bei Klick auf "graue" Datumsfelder
 '======================================================================================================================
-' Übergabeparameter:
+' Ãœbergabeparameter:
 '         intTypePrePost: 1 = Vormonat / 2 = Folgemonat
 '----------------------------------------------------------------------------------------------------------------------
 
@@ -376,7 +376,7 @@ Private Sub pSetNewMonth(intTypePrePost)
 On Error GoTo err_pSetNewMonth
 g_bolMonthChange = True         ' Automatische Refreshs unterbinden
 
-Call pClearDataLabels           ' Raster zurücksetzen
+Call pClearDataLabels           ' Raster zurÃ¼cksetzen
 
 ' Verarbeitung
 Select Case intTypePrePost
@@ -408,13 +408,13 @@ Exit Sub
 ' Errorhandling
 err_pSetNewMonth:
     MsgBox "Error " & Err.Number & " (" & Err.Description _
-        & ") in der Prozedur 'pSetNewMonth' in 'frmCalendar'. Monatswechsel konnte nicht verarbeitet werden. Ausführung wird abgebrochen.", vbCritical, "Laufzeitfehler"
+        & ") in der Prozedur 'pSetNewMonth' in 'frmCalendar'. Monatswechsel konnte nicht verarbeitet werden. AusfÃ¼hrung wird abgebrochen.", vbCritical, "Laufzeitfehler"
     End
 End Sub
 
 
 '=============================================================================================================================
-' 11 - 14 : Schaltflächen Monat und Jahr + und -
+' 11 - 14 : SchaltflÃ¤chen Monat und Jahr + und -
 '=============================================================================================================================
 Private Sub cmdMonthUp_Click()
     If cmbMonth.ListIndex < 11 Then cmbMonth.Text = cmbMonth.List(cmbMonth.ListIndex + 1)
@@ -436,8 +436,8 @@ End Sub
 ' 15 - 56 : Click-Events auf Labels
 '======================================================================================================================
 ' Anmerkungen:
-'       Woche 1:            Prüfung, ob Tag ausgegraut ist (Vormonat), wenn ja, Aufruf zum Setzen des Vormonats
-'       Wochen 5 und 6:     Prüfung, ob Tag ausgegraut ist (Folgemonat), wenn ja, Aufruf zum Setzen des Folgemonats
+'       Woche 1:            PrÃ¼fung, ob Tag ausgegraut ist (Vormonat), wenn ja, Aufruf zum Setzen des Vormonats
+'       Wochen 5 und 6:     PrÃ¼fung, ob Tag ausgegraut ist (Folgemonat), wenn ja, Aufruf zum Setzen des Folgemonats
 '----------------------------------------------------------------------------------------------------------------------
 
 ' Woche 1
