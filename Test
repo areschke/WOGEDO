@@ -1,0 +1,165 @@
+Private Sub Workbook_Open()
+
+'    Application.ScreenUpdating = False
+'    ActiveWindow.DisplayHorizontalScrollBar = False
+'    ActiveWindow.DisplayVerticalScrollBar = False
+'    ActiveWindow.DisplayHeadings = False
+'    ActiveWindow.DisplayWorkbookTabs = False
+'    Application.DisplayFormulaBar = False
+'    Application.ExecuteExcel4Macro "Show.Toolbar(""Ribbon"", False)"
+'    Application.WindowState = xlMaximized
+'    Application.DisplayStatusBar = False
+'
+'    meineCloseVar = False
+'    Tabelle2.ScrollArea = "A1:A1"
+'    Application.ScreenUpdating = True
+
+End Sub
+
+'
+'Sub ScreenFull()
+'
+'Dim wbk As Workbook
+'
+'
+'  'Fullscreen anzeigen
+'  If Not wbk Is Nothing Then
+'    If MsgBox("Die Fullscreeneinstellungen für """ & wbk.Name _
+'      & """ wurden noch nicht zurückgesetzt." _
+'      & vbLf & "Makro ""ScreenNormal"" jetzt starten?", _
+'            vbQuestion + vbOKCancel, "Fullscreen zurücksetzen") = vbOK Then
+'      Call ScreenNormal
+'    Else
+'      Exit Sub
+'    End If
+'  End If
+'  Set wbk = ActiveWorkbook
+'  With Application.Windows(wbk.Name)
+'    bolHeadings = .DisplayHeadings
+'    .DisplayHeadings = False
+'    bolHScrollBar = .DisplayHorizontalScrollBar
+'    .DisplayHorizontalScrollBar = False
+'    bolVScrollbar = .DisplayVerticalScrollBar
+'    .DisplayVerticalScrollBar = False
+'    bolWorkTabs = .DisplayWorkbookTabs
+'    .DisplayWorkbookTabs = False
+'  End With
+'  With Application
+'    .DisplayFormulaBar = False
+'    .DisplayFullScreen = True
+'  End With
+'End Sub
+'
+'Sub ScreenNormal()
+'Dim wbk As Workbook
+'Set wbk = ActiveWorkbook
+'  'Fullscreen zurücksetzen
+'  If wbk Is Nothing Then
+'    MsgBox "Makro ""ScreenFull"" wurde noch nicht gestartet.", _
+'          vbInformation, "Fullscreen zurücksetzen"
+'  Else
+'    With Application.Windows(wbk.Name)
+'      .DisplayHeadings = bolHeadings
+'      .DisplayHorizontalScrollBar = bolHScrollBar
+'      .DisplayVerticalScrollBar = bolVScrollbar
+'      .DisplayWorkbookTabs = bolWorkTabs
+'    End With
+'    With Application
+'      .DisplayFormulaBar = True
+'      .DisplayFullScreen = False
+'    End With
+'  End If
+'  Set wbk = Nothing
+'End Sub
+
+
+
+Sub Auto_Close()
+
+    Application.ScreenUpdating = False
+    
+    If ThisWorkbook.Saved = False Then
+        ThisWorkbook.Save
+    End If
+    
+    'Call ScreenNormal
+    If Application.Workbooks.count = 1 Then
+        ActiveWorkbook.Saved = True
+        Application.Quit
+    Else
+        ActiveWorkbook.Close SaveChanges:=True
+    End If
+        
+    Application.DisplayFormulaBar = True
+    Application.ScreenUpdating = True
+  
+End Sub
+
+
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
+
+Call ExportVisualBasicCode
+  Cancel = Not meineCloseVar
+ 
+End Sub
+
+
+' Excel macro to export all VBA source code in this project to text files for proper source control versioning
+' Requires enabling the Excel setting in Options/Trust Center/Trust Center Settings/Macro Settings/Trust access to the VBA project object model
+Public Sub ExportVisualBasicCode()
+    Const Module = 1
+    Const ClassModule = 2
+    Const Form = 3
+    Const Document = 100
+    Const Padding = 24
+    
+    Dim VBComponent As Object
+    Dim count As Integer
+    Dim path As String
+    Dim directory As String
+    Dim extension As String
+    'Dim fso As New FileSystemObject
+    
+    directory = ActiveWorkbook.path & "\VisualBasic"
+    count = 0
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    If Not fso.FolderExists(directory) Then
+        Call fso.CreateFolder(directory)
+    End If
+    Set fso = Nothing
+    
+    For Each VBComponent In ActiveWorkbook.VBProject.VBComponents
+        Select Case VBComponent.Type
+            Case ClassModule, Document
+                extension = ".cls"
+            Case Form
+                extension = ".frm"
+            Case Module
+                extension = ".bas"
+            Case Else
+                extension = ".txt"
+        End Select
+            
+                
+        On Error Resume Next
+        Err.Clear
+        
+        path = directory & "\" & VBComponent.Name & extension
+        Call VBComponent.Export(path)
+        
+        If Err.Number <> 0 Then
+            Call MsgBox("Failed to export " & VBComponent.Name & " to " & path, vbCritical)
+        Else
+            count = count + 1
+            Debug.Print "Exported " & Left$(VBComponent.Name & ":" & Space(Padding), Padding) & path
+        End If
+
+        On Error GoTo 0
+    Next
+    
+    Application.StatusBar = "Successfully exported " & CStr(count) & " VBA files to " & directory
+    Application.OnTime Now + TimeSerial(0, 0, 10), "ClearStatusBar"
+End Sub
+
